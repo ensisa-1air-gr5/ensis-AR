@@ -117,3 +117,6 @@ sceneform.asset('sampledata/models/Raphael_DUPUIS.fbx',
 sceneform.asset('sampledata/models/Souhir_BEN_SOUISSI.fbx',
         'src/main/res/raw/ben_souissi')
 
+sceneform.asset('sampledata/models/Bureau_Chercheurs_MIAM2.fbx',
+        'src/main/res/raw/miam2')
+
