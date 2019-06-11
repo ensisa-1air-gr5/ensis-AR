@@ -36,7 +36,10 @@ import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.rendering.Color;
+import com.google.ar.sceneform.rendering.MaterialFactory;
 import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.rendering.ShapeFactory;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
@@ -52,6 +55,69 @@ public class HelloSceneformActivity extends AppCompatActivity {
   private ModelRenderable toilette_model;
   private ModelRenderable e30_model;
   private ModelRenderable e31_model;
+  private ModelRenderable e32_model;
+  private ModelRenderable e33_model;
+  private ModelRenderable e34_model;
+  private ModelRenderable e35_model;
+  private ModelRenderable e36_model;
+  private ModelRenderable e37_model;
+  private ModelRenderable e37_bis_model;
+  private ModelRenderable e38_model;
+  private ModelRenderable Aubry_E;
+  private ModelRenderable Binder_G;
+  private ModelRenderable Basset_M;
+  private ModelRenderable Dupuis_R;
+  private ModelRenderable BEN_SOUISSI_S;
+
+
+  public class Salle {
+    public String name;
+    public Node node;
+
+    public Salle(String name, AnchorNode parent, ModelRenderable model,boolean is_local, Vector3 position, Vector3 scale, Quaternion rotation) {
+        this.name = name;
+        this.node = new Node();
+        this.node.setParent(parent);
+        model.setShadowReceiver(false);
+        model.setShadowCaster(false);
+        this.node.setRenderable(model);
+        if(is_local) {
+            this.node.setLocalPosition(position);
+        } else {
+            this.node.setWorldPosition(position);
+        }
+        this.node.setLocalScale(scale);
+        this.node.setLocalRotation(rotation);
+    }
+  }
+
+  private Node addLine(Salle from, Salle to) {
+    float lenght = Vector3.subtract(from.node.getWorldPosition(), to.node.getWorldPosition()).length();
+    Color blue = new Color(android.graphics.Color.parseColor("#2c5c9a"));
+    Node node = new Node();
+    //create a blue cylinder
+    MaterialFactory.makeOpaqueWithColor(this.getApplicationContext(), blue)
+            .thenAccept(material -> {
+                ModelRenderable model = ShapeFactory.makeCylinder(0.01f, lenght,
+                        new Vector3(0f, lenght/2, 0f), material);
+                model.setShadowCaster(false);
+                model.setShadowReceiver(false);
+
+                //assign model
+                node.setParent(from.node.getParent());
+                node.setRenderable(model);
+                node.setWorldPosition(Vector3.add(to.node.getWorldPosition(), new Vector3(-0.5f, -1f, 0f)));
+
+                //set rotation
+                final Vector3 difference = Vector3.subtract(to.node.getWorldPosition(), from.node.getWorldPosition());
+                final Vector3 directionFromTopToBottom = difference.normalized();
+                final Quaternion rotationFromAToB =
+                        Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
+                    node.setWorldRotation(Quaternion.multiply(rotationFromAToB,
+                        Quaternion.axisAngle(new Vector3(1.0f, 0.0f, 0.0f), 90)));
+        });
+    return node;
+  }
 
   @Override
   @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -67,36 +133,10 @@ public class HelloSceneformActivity extends AppCompatActivity {
     setContentView(R.layout.activity_ux);
     arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
 
-
-
-  /*  Session s = arFragment.getArSceneView().getSession();
-
-    Anchor pc = s.createAnchor(Pose.makeTranslation(new float[] {0,0,2f}));
-
-    AnchorNode android = new AnchorNode(pc);
-    android.setParent(arFragment.getArSceneView().getScene());
-    android.setLocalPosition(new Vector3(0,0,-2));
-    android.setRenderable(andyRenderable);*/
-
-    // When you build a Renderable, Sceneform loads its resources in the background while returning
-    // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
-  /*  ModelRenderable.builder()
-        .setSource(this, R.raw.andy)
-        .build()
-        .thenAccept(renderable -> andyRenderable = renderable)
-        .exceptionally(
-            throwable -> {
-              Toast toast =
-                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
-              toast.setGravity(Gravity.CENTER, 0, 0);
-              toast.show();
-              return null;
-            });*/
-
-         ModelRenderable.builder()
+      ModelRenderable.builder()
               .setSource(this, R.raw.toilettes)
               .build()
-              .thenAccept(renderable -> toilettes_model = renderable)
+              .thenAccept(renderable -> toilette_model = renderable)
               .exceptionally(
                       throwable -> {
                           Toast toast =
@@ -106,7 +146,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
                           return null;
                       });
 
-         ModelRenderable.builder()
+      ModelRenderable.builder()
               .setSource(this, R.raw.ascenseur)
               .build()
               .thenAccept(renderable -> ascenseur_model = renderable)
@@ -119,10 +159,129 @@ public class HelloSceneformActivity extends AppCompatActivity {
                           return null;
                       });
 
-         ModelRenderable.builder()
+      ModelRenderable.builder()
               .setSource(this, R.raw.e30)
               .build()
               .thenAccept(renderable -> e30_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.e31)
+              .build()
+              .thenAccept(renderable -> e31_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.e32)
+              .build()
+              .thenAccept(renderable -> e32_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.e33)
+              .build()
+              .thenAccept(renderable -> e33_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.e34)
+              .build()
+              .thenAccept(renderable -> e34_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.e35)
+              .build()
+              .thenAccept(renderable -> e35_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.e36)
+              .build()
+              .thenAccept(renderable -> e36_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.e37)
+              .build()
+              .thenAccept(renderable -> e37_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.e37_bis)
+              .build()
+              .thenAccept(renderable -> e37_bis_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.e38)
+              .build()
+              .thenAccept(renderable -> e38_model = renderable)
               .exceptionally(
                       throwable -> {
                           Toast toast =
@@ -137,52 +296,30 @@ public class HelloSceneformActivity extends AppCompatActivity {
         (HitTestResult hitResult, MotionEvent motionEvent) -> {
 
 
-          Anchor a = arFragment.getArSceneView().getSession().createAnchor(Pose.makeTranslation(new float[] {0,0,-3.8f}));
+            Anchor debut3 = arFragment.getArSceneView().getSession().createAnchor(Pose.makeTranslation(new float[] {0,0,-15f}));
+            Anchor fin3 = arFragment.getArSceneView().getSession().createAnchor(Pose.makeTranslation(new float[] {0,0,-30f}));
 
-          AnchorNode test = new AnchorNode(a);
-          test.setParent(arFragment.getArSceneView().getScene());
+            AnchorNode debutNode3 = new AnchorNode(debut3);
+            debutNode3.setParent(arFragment.getArSceneView().getScene());
 
-          Node toilette = new Node();
-          toilette.setParent(test);
-          toilette.setRenderable(toilette_model);
-          toilette.setLocalPosition(new Vector3(0f,1f,0.5f));
-          toilette.setLocalScale(new Vector3(0.5f, 1f, 0.5f));
-          toilette.setLocalRotation(new Quaternion(new Vector3(0, 1, 0), -90));
+            AnchorNode finNode3 = new AnchorNode(fin3);
+            finNode3.setParent(arFragment.getArSceneView().getScene());
 
-          Node ascenseur = new Node();
-          ascenseur.setParent(test);
-          ascenseur.setRenderable(ascenseur_model);
-          ascenseur.setLocalPosition(new Vector3(0f,1f,-1f));
-          ascenseur.setLocalRotation(new Quaternion(new Vector3(0, 1, 0), -90));
-          ascenseur.setLocalScale(new Vector3(0.5f, 1f, 0.5f));
-
-          Node toilette_handicap = new Node();
-          toilette_handicap.setParent(test);
-          toilette_handicap.setRenderable(toilette_model);
-          toilette_handicap.setLocalPosition(new Vector3(0f,1f,-7f));
-          toilette_handicap.setLocalScale(new Vector3(0.5f, 1f, 0.5f));
-          toilette_handicap.setLocalRotation(new Quaternion(new Vector3(0, 1, 0), -90));
-
-          Node e30 = new Node();
-          e30.setParent(test);
-          e30.setRenderable(e30_model);
-          e30.setLocalPosition(new Vector3(0f,1f,-16f));
-          e30.setLocalScale(new Vector3(0.5f, 1f, 0.5f));
-          e30.setLocalRotation(new Quaternion(new Vector3(0, 1, 0), -90));
-
-
-          return false;
-          /*// Create the Anchor.
-          Anchor anchor = hitResult.createAnchor();
-
-          AnchorNode anchorNode = new AnchorNode(anchor);
-          anchorNode.setParent(arFragment.getArSceneView().getScene());
-
-          // Create the transformable andy and add it to the anchor.
-          TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
-          andy.setParent(anchorNode);
-          andy.setRenderable(andyRenderable);
-          andy.select();*/
+            Salle toilette = new Salle("Toilette", debutNode3,toilette_model, false, new Vector3(0f,1f,-3.3f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) );
+            Salle ascenseur = new Salle("Ascenseur", debutNode3, ascenseur_model, false, new Vector3(0f,1f,-4.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) );
+            Salle toilette_handicap = new Salle("Toilette handicapé", debutNode3,toilette_model, false, new Vector3(0f,1f,-9.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) );
+            Salle e30 = new Salle("e30", debutNode3,e30_model, false, new Vector3(0f,1f,-17.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) );
+            Salle e31 = new Salle("e31", debutNode3, e31_model, false, new Vector3(0f,1f, -18.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
+            Salle e32 = new Salle("e32", debutNode3, e32_model, false, new Vector3(0f,1f, -30.4f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
+            Salle e33 = new Salle("e33", finNode3, e33_model, false, new Vector3(0f,1f, -31.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
+            Salle e34 = new Salle("e34", finNode3, e34_model, false, new Vector3(0f,1f, -40f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
+            Salle e35 = new Salle("e35", finNode3, e35_model, false, new Vector3(0f,1f, -44.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
+            Salle e36 = new Salle("e36", finNode3, e36_model, false, new Vector3(0f,1f, -50f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
+            Salle e37 = new Salle("e37", finNode3, e37_model, false, new Vector3(0f,1f, -53.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
+            Salle e37_bis = new Salle("e37_bis", finNode3, e37_bis_model, false, new Vector3(0f,1f, -60.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
+            Salle e38 = new Salle("e38", finNode3, e38_model, false, new Vector3(0f,1f, -67.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
+            addLine(ascenseur, e30);
+            return false;
         });
   }
 

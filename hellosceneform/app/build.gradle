@@ -75,3 +75,45 @@ sceneform.asset('sampledata/models/E30.fbx',
 sceneform.asset('sampledata/models/E31.fbx',
         'src/main/res/raw/e31')
 
+sceneform.asset('sampledata/models/E32.fbx',
+        'src/main/res/raw/e32')
+
+sceneform.asset('sampledata/models/E33.fbx',
+        'src/main/res/raw/e33')
+
+sceneform.asset('sampledata/models/E34.fbx',
+        'src/main/res/raw/e34')
+
+sceneform.asset('sampledata/models/E35.fbx',
+        'src/main/res/raw/e35')
+
+sceneform.asset('sampledata/models/E36.fbx',
+        'src/main/res/raw/e36')
+
+sceneform.asset('sampledata/models/E37.fbx',
+        'src/main/res/raw/e37')
+
+sceneform.asset('sampledata/models/E37_Bis.fbx',
+        'src/main/res/raw/e37_bis')
+
+sceneform.asset('sampledata/models/E38.fbx',
+        'src/main/res/raw/e38')
+
+sceneform.asset('sampledata/models/Evelyne_AUBRY.fbx',
+        'src/main/res/raw/aubry')
+
+sceneform.asset('sampledata/models/Gérard_BINDER.fbx',
+        'src/main/res/raw/binder')
+
+sceneform.asset('sampledata/models/Michel_BASSET.fbx',
+        'src/main/res/raw/basset')
+
+sceneform.asset('sampledata/models/Pierre_AMBS.fbx',
+        'src/main/res/raw/ambs')
+
+sceneform.asset('sampledata/models/Raphael_DUPUIS.fbx',
+        'src/main/res/raw/bupuis')
+
+sceneform.asset('sampledata/models/Souhir_BEN_SOUISSI.fbx',
+        'src/main/res/raw/ben_souissi')
+
