@@ -43,6 +43,8 @@ import com.google.ar.sceneform.rendering.ShapeFactory;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
+import java.util.ArrayList;
+
 /**
  * This is an example activity that uses the Sceneform UX package to make common AR tasks easier.
  */
@@ -74,7 +76,10 @@ public class HelloSceneformActivity extends AppCompatActivity {
     public String name;
     public Node node;
 
+    private ArrayList<Salle> salles;
+
     public Salle(String name, AnchorNode parent, ModelRenderable model,boolean is_local, Vector3 position, Vector3 scale, Quaternion rotation) {
+        this.salles = new ArrayList<>();
         this.name = name;
         this.node = new Node();
         this.node.setParent(parent);
@@ -89,6 +94,33 @@ public class HelloSceneformActivity extends AppCompatActivity {
         this.node.setLocalScale(scale);
         this.node.setLocalRotation(rotation);
     }
+
+      public void addNeighbourg(Salle s){
+          if(!this.salles.contains(s)){
+              this.salles.add(s);
+              s.addNeighbourg(this);
+          }
+
+      }
+
+      public ArrayList<Salle> goTo(Salle end , Salle previous){
+          ArrayList<Salle> res = new ArrayList<>();
+          if(this == end){
+              res.add(this);
+              return res;
+          }
+          else{
+              for(Salle s : this.salles){
+                  if(s==previous)continue;
+                  ArrayList<Salle> listSalle = s.goTo(end,this);
+                  if(!listSalle.isEmpty()) {
+                      listSalle.add(this);
+                      return listSalle;
+                  }
+              }
+          }
+          return res;
+      }
   }
 
   private Node addLine(Salle from, Salle to) {
@@ -117,6 +149,12 @@ public class HelloSceneformActivity extends AppCompatActivity {
                         Quaternion.axisAngle(new Vector3(1.0f, 0.0f, 0.0f), 90)));
         });
     return node;
+  }
+
+  public void drawPath(ArrayList<Salle> path){
+    for(int i = 0 ; i < path.size()-1; i++){
+        addLine(path.get(i),path.get(i+1));
+    }
   }
 
   @Override
@@ -319,6 +357,19 @@ public class HelloSceneformActivity extends AppCompatActivity {
             Salle e37_bis = new Salle("e37_bis", finNode3, e37_bis_model, false, new Vector3(0f,1f, -60.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
             Salle e38 = new Salle("e38", finNode3, e38_model, false, new Vector3(0f,1f, -67.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
             addLine(ascenseur, e30);
+            toilette.addNeighbourg(ascenseur);
+            ascenseur.addNeighbourg(toilette_handicap);
+            toilette_handicap.addNeighbourg(e30);
+            e30.addNeighbourg(e31);
+            e31.addNeighbourg(e32);
+            e32.addNeighbourg(e33);
+            e33.addNeighbourg(e34);
+            e34.addNeighbourg(e35);
+            e35.addNeighbourg(e36);
+            e36.addNeighbourg(e37);
+            e37.addNeighbourg(e37_bis);
+            e37_bis.addNeighbourg(e38);
+            drawPath(ascenseur.goTo(e36,null));
             return false;
         });
   }

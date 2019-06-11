@@ -102,7 +102,7 @@ sceneform.asset('sampledata/models/E38.fbx',
 sceneform.asset('sampledata/models/Evelyne_AUBRY.fbx',
         'src/main/res/raw/aubry')
 
-sceneform.asset('sampledata/models/Gérard_BINDER.fbx',
+sceneform.asset('sampledata/models/Gerard_BINDER.fbx',
         'src/main/res/raw/binder')
 
 sceneform.asset('sampledata/models/Michel_BASSET.fbx',
