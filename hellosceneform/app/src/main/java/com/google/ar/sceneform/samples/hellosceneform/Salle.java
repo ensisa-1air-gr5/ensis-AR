@@ -21,6 +21,7 @@ public class  Salle{
         model.setShadowReceiver(false);
         model.setShadowCaster(false);
         this.node.setRenderable(model);
+        this.node.setWorldPosition(position);
         this.node.setLocalScale(scale);
         this.node.setLocalRotation(rotation);
     }
