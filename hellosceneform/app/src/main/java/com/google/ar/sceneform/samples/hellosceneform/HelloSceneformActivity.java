@@ -396,14 +396,17 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
             Salle e34 = gSalle.create(new Salle("E 34", finNode3, e34_model,  new Vector3(0f,1f, -40f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
             Salle e36 = gSalle.create(new Salle("E 36", finNode3, e36_model,  new Vector3(0f,1f, -50f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
             Salle e37 = gSalle.create(new Salle("E 37", finNode3, e37_model,  new Vector3(0f,1f, -53.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+           // Salle iariss = gSalle.create(new Salle("Iariss", finNode3, e37_model,  new Vector3(-2.4f,1f, -59.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+
             Salle e37_bis = gSalle.create(new Salle("E 37 bis", finNode3, e37_bis_model, new Vector3(0f,1f, -60.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
             Salle e38 = gSalle.create(new Salle("E 38", finNode3, e38_model,  new Vector3(0f,1f, -67.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-            Salle miam2 = gSalle.create(new Salle("Bureau Chercheurs Miam 2", finNode3, miam2_model,  new Vector3(-6f, 1f, -28.5f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), -180)));
-            Salle miam3 = gSalle.create(new Salle("Bureau Chercheurs Miam 3", finNode3, miam3_model,  new Vector3(-6f, 1f, -34.5f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
+            Salle miam2 = gSalle.create(new Salle("Bureau Chercheurs Miam 2", finNode3, miam2_model,  new Vector3(-6f, 1f, -29.2f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), -180)));
+            Salle miam3 = gSalle.create(new Salle("Bureau Chercheurs Miam 3", finNode3, miam3_model,  new Vector3(-5f, 1f, -35f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
+           // Salle laufenburger = gSalle.create(new Salle("Lauffenburger", ))
             Salle binder = gSalle.create(new Salle("Gérard BINDER", finNode3, binder_model,  new Vector3(-17f, 1f, -28.2f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), -180)));
             Salle binderBirouche = gSalle.create(new Salle("Node entre Birouche et Gérard Binder",finNode3,null,new Vector3(-17f,1f,-29.3f),new Vector3(0.5f,1f,0.5f),new Quaternion(new Vector3(0,1,0))));
-            Salle birouche = gSalle.create(new Salle("Abderazik BIROUCHE", finNode3, birouche_model,  new Vector3(-17f, 1f, -31.8f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
-            Salle dupuis = gSalle.create(new Salle("Raphael DUPUIS", finNode3, dupuis_model,  new Vector3(-21.5f, 1f, -31.8f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
+            Salle birouche = gSalle.create(new Salle("Abderazik BIROUCHE", finNode3, birouche_model,  new Vector3(-17f, 1f, -30.8f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
+            Salle dupuis = gSalle.create(new Salle("Raphael DUPUIS", finNode3, dupuis_model,  new Vector3(-21.5f, 1f, -30.8f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
 
 
             toilette.addNeighbour(ascenseur);

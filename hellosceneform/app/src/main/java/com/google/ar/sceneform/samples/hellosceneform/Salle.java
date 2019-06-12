@@ -25,7 +25,7 @@ public class  Salle{
         }
         this.node.setWorldPosition(position);
         this.node.setLocalScale(scale);
-        this.node.setLocalRotation(rotation);
+        this.node.setWorldRotation(rotation);
     }
 
     public void addNeighbour(Salle s){
