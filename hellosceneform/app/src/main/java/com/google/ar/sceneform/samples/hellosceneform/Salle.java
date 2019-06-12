@@ -18,18 +18,20 @@ public class  Salle{
         this.name = name;
         this.node = new Node();
         this.node.setParent(parent);
-        model.setShadowReceiver(false);
-        model.setShadowCaster(false);
-        this.node.setRenderable(model);
+        if (model != null){
+            model.setShadowReceiver(false);
+            model.setShadowCaster(false);
+            this.node.setRenderable(model);
+        }
         this.node.setWorldPosition(position);
         this.node.setLocalScale(scale);
         this.node.setLocalRotation(rotation);
     }
 
-    public void addNeighbourg(Salle s){
+    public void addNeighbour(Salle s){
         if(!this.salles.contains(s)){
             this.salles.add(s);
-            s.addNeighbourg(this);
+            s.addNeighbour(this);
         }
     }
 
