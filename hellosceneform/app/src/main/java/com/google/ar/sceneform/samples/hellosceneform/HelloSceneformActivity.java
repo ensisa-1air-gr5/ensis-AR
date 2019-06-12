@@ -82,7 +82,7 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
                 //assign model
                 node.setParent(from.getNode().getParent());
                 node.setRenderable(model);
-                node.setWorldPosition(Vector3.add(to.getNode().getWorldPosition(), new Vector3(-0.5f, -1f, 0f)));
+                node.setWorldPosition(Vector3.add(to.getNode().getWorldPosition(), new Vector3(-0.5f, -2f, 0f)));
 
                 //set rotation
                 final Vector3 difference = Vector3.subtract(to.getNode().getWorldPosition(), from.getNode().getWorldPosition());
