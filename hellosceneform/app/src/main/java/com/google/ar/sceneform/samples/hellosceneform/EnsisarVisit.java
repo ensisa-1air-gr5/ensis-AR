@@ -83,7 +83,7 @@ public class EnsisarVisit extends AppCompatActivity implements AdapterView.OnIte
                 //assign model
                 node.setParent(from.getNode().getParent());
                 node.setRenderable(model);
-                node.setWorldPosition(Vector3.add(to.getNode().getWorldPosition(), new Vector3(-0.5f, -2f, 0f)));
+                node.setWorldPosition(Vector3.add(to.getNode().getWorldPosition(), new Vector3(-1f, -2f, 0f)));
 
                 //set rotation
                 final Vector3 difference = Vector3.subtract(to.getNode().getWorldPosition(), from.getNode().getWorldPosition());
@@ -378,7 +378,7 @@ public class EnsisarVisit extends AppCompatActivity implements AdapterView.OnIte
             if(direction == null) {
                 direction = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
                 direction.y = 0;
-             //   world.setWorldRotation(new Quaternion(new Vector3(0,1,0), (float)Math.toDegrees(Math.asin(direction.x/direction.length()))));
+                world.setWorldRotation(new Quaternion(new Vector3(0,1,0), (float)Math.toDegrees(Math.asin(direction.x/direction.length()))));
             }
 
             AnchorNode debutNode3 = new AnchorNode(debut3);
@@ -402,7 +402,7 @@ public class EnsisarVisit extends AppCompatActivity implements AdapterView.OnIte
             Salle e37_bis = gSalle.create(new Salle("E 37 bis", finNode3, e37_bis_model, new Vector3(0f,1f, -60.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
             Salle e38 = gSalle.create(new Salle("E 38", finNode3, e38_model,  new Vector3(0f,1f, -67.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
             Salle miam2 = gSalle.create(new Salle("Bureau Chercheurs Miam 2", finNode3, miam2_model,  new Vector3(-6f, 1f, -29.2f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), -180)));
-            Salle miam3 = gSalle.create(new Salle("Bureau Chercheurs Miam 3", finNode3, miam3_model,  new Vector3(-5f, 1f, -35f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
+            Salle miam3 = gSalle.create(new Salle("Bureau Chercheurs Miam 3", finNode3, miam3_model,  new Vector3(-5.3f, 1f, -35f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
            // Salle laufenburger = gSalle.create(new Salle("Lauffenburger", ))
             Salle binder = gSalle.create(new Salle("Gérard BINDER", finNode3, binder_model,  new Vector3(-17f, 1f, -28.2f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), -180)));
             Salle binderBirouche = gSalle.create(new Salle("Node entre Birouche et Gérard Binder",finNode3,null,new Vector3(-17f,1f,-29.3f),new Vector3(0.5f,1f,0.5f),new Quaternion(new Vector3(0,1,0))));
