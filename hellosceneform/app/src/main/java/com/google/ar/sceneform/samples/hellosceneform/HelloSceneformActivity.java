@@ -10,6 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
@@ -30,7 +34,7 @@ import java.util.ArrayList;
 /**
  * This is an example activity that uses the Sceneform UX package to make common AR tasks easier.
  */
-public class HelloSceneformActivity extends AppCompatActivity {
+public class HelloSceneformActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
   private static final String TAG = HelloSceneformActivity.class.getSimpleName();
   private static final double MIN_OPENGL_VERSION = 3.0;
 
@@ -55,8 +59,8 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
   private GSalle gSalle;
   private int nbtap = 0;
-
-
+  private Spinner spinner;
+  private boolean isCreated = false;
   private Node addLine(Salle from, Salle to) {
     float lenght = Vector3.subtract(from.getNode().getWorldPosition(), to.getNode().getWorldPosition()).length();
     Color blue = new Color(android.graphics.Color.parseColor("#2c5c9a"));
@@ -277,6 +281,12 @@ public class HelloSceneformActivity extends AppCompatActivity {
                           return null;
                       });
 
+        spinner = findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.salles, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(this);
 
     arFragment.getArSceneView().getScene().setOnTouchListener(
         (HitTestResult hitResult, MotionEvent motionEvent) -> {
@@ -295,16 +305,16 @@ public class HelloSceneformActivity extends AppCompatActivity {
                 Salle toilette = gSalle.create(new Salle("Toilette", debutNode3,toilette_model,  new Vector3(0f,1f,-3.3f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) ));
                 Salle ascenseur = gSalle.create(new Salle("Ascenseur", debutNode3, ascenseur_model,  new Vector3(0f,1f,-4.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) ));
                 Salle toilette_handicap = gSalle.create(new Salle("Toilette handicapé", debutNode3,toilette_model,  new Vector3(0f,1f,-9.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)) );
-                Salle e30 = gSalle.create(new Salle("e30", debutNode3,e30_model,  new Vector3(0f,1f,-17.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)) );
-                Salle e31 = gSalle.create(new Salle("e31", debutNode3, e31_model, new Vector3(0f,1f, -18.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e32 = gSalle.create(new Salle("e32", debutNode3, e32_model, new Vector3(0f,1f, -30.4f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e33 = gSalle.create(new Salle("e33", finNode3, e33_model,  new Vector3(0f,1f, -31.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e34 = gSalle.create(new Salle("e34", finNode3, e34_model,  new Vector3(0f,1f, -40f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e35 = gSalle.create(new Salle("e35", finNode3, e35_model,  new Vector3(0f,1f, -44.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e36 = gSalle.create(new Salle("e36", finNode3, e36_model,  new Vector3(0f,1f, -50f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e37 = gSalle.create(new Salle("e37", finNode3, e37_model,  new Vector3(0f,1f, -53.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e37_bis = gSalle.create(new Salle("e37_bis", finNode3, e37_bis_model, new Vector3(0f,1f, -60.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e38 = gSalle.create(new Salle("e38", finNode3, e38_model,  new Vector3(0f,1f, -67.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e30 = gSalle.create(new Salle("E 30", debutNode3,e30_model,  new Vector3(0f,1f,-17.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)) );
+                Salle e31 = gSalle.create(new Salle("E 31", debutNode3, e31_model, new Vector3(0f,1f, -18.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e32 = gSalle.create(new Salle("E 32", debutNode3, e32_model, new Vector3(0f,1f, -30.4f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e33 = gSalle.create(new Salle("E 33", finNode3, e33_model,  new Vector3(0f,1f, -31.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e34 = gSalle.create(new Salle("E 34", finNode3, e34_model,  new Vector3(0f,1f, -40f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e35 = gSalle.create(new Salle("E 35", finNode3, e35_model,  new Vector3(0f,1f, -44.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e36 = gSalle.create(new Salle("E 36", finNode3, e36_model,  new Vector3(0f,1f, -50f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e37 = gSalle.create(new Salle("E 37", finNode3, e37_model,  new Vector3(0f,1f, -53.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e37_bis = gSalle.create(new Salle("E 37 bis", finNode3, e37_bis_model, new Vector3(0f,1f, -60.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e38 = gSalle.create(new Salle("E 38", finNode3, e38_model,  new Vector3(0f,1f, -67.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
 
                 toilette.addNeighbourg(ascenseur);
                 ascenseur.addNeighbourg(toilette_handicap);
@@ -356,4 +366,19 @@ public class HelloSceneformActivity extends AppCompatActivity {
     }
     return true;
   }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(!isCreated){
+            isCreated = true;
+        }
+        else{
+            drawPath(nearest().goTo(gSalle.getSalle(spinner.getSelectedItem().toString()),null));
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

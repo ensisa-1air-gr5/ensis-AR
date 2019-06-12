@@ -15,5 +15,24 @@
    limitations under the License.
 -->
 <resources>
-    <string name="app_name">Hello Sceneform</string>
+    <string name="app_name">ENSIS\'AR</string>
+    <string-array name="salles" >
+        <item>E 30</item>
+        <item>E 31</item>
+        <item>E 32</item>
+        <item>E 33</item>
+        <item>E 34</item>
+        <item>E 36</item>
+        <item>E 37</item>
+        <item>E 37 bis</item>
+        <item>E 38</item>
+        <item>Toilette</item>
+        <item>Ascenseur</item>
+        <item>E 38</item>
+        <item>Bureau Chercheurs Miam 2</item>
+        <item>Bureau Chercheurs Miam 3</item>
+        <item>Gérard BINDER</item>
+        <item>Abderazik BIROUCHE</item>
+        <item>Raphael DUPUIS</item>
+    </string-array>
 </resources>
