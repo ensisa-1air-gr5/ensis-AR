@@ -33,8 +33,8 @@ import java.util.ArrayList;
 /**
  * This is an example activity that uses the Sceneform UX package to make common AR tasks easier.
  */
-public class HelloSceneformActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-  private static final String TAG = HelloSceneformActivity.class.getSimpleName();
+public class EnsisarVisit extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+  private static final String TAG = EnsisarVisit.class.getSimpleName();
   private static final double MIN_OPENGL_VERSION = 3.0;
 
   boolean create = false; // if true then all the rendarable are already assign
@@ -66,6 +66,7 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
   private Spinner spinner;
   private boolean isCreated = false;
   private Vector3 direction = null;
+  private ArrayList<Node> path = new ArrayList<>();
 
   private Node addLine(Salle from, Salle to) {
     float lenght = Vector3.subtract(from.getNode().getWorldPosition(), to.getNode().getWorldPosition()).length();
@@ -97,7 +98,7 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
 
   private void drawPath(ArrayList<Salle> path){
     for(int i = 0 ; i < path.size()-1; i++){
-        addLine(path.get(i),path.get(i+1));
+       this.path.add(addLine(path.get(i),path.get(i+1)));
     }
   }
 
@@ -377,7 +378,7 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
             if(direction == null) {
                 direction = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
                 direction.y = 0;
-                world.setWorldRotation(new Quaternion(new Vector3(0,1,0), (float)Math.toDegrees(Math.asin(direction.x/direction.length()))));
+             //   world.setWorldRotation(new Quaternion(new Vector3(0,1,0), (float)Math.toDegrees(Math.asin(direction.x/direction.length()))));
             }
 
             AnchorNode debutNode3 = new AnchorNode(debut3);
@@ -470,10 +471,20 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
                 Toast toast = Toast.makeText(this, spinner.getSelectedItem().toString(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
+                deletePath();
                 drawPath(nearest().goTo(gSalle.getSalle(spinner.getSelectedItem().toString()),null));
             }
         }
     }
+
+    private void deletePath(){
+      for(Node n : this.path){
+          n.setRenderable(null);
+          n.setEnabled(false);
+      }
+      this.path.clear();
+    }
+
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
