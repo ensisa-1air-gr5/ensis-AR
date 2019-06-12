@@ -1,0 +1,116 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.ar.sceneform.plugin'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.example.ensisar"
+        minSdkVersion 26
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:support-v4:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation "com.google.ar.sceneform:core:1.7.0"
+    implementation 'com.google.android.gms:play-services-vision:17.0.2'
+    implementation "com.google.ar.sceneform.ux:sceneform-ux:1.7.0"
+    implementation "com.google.ar.sceneform.ux:sceneform-ux:1.9.0"
+
+
+}
+
+
+sceneform.asset('sampledata/Trex.fbx',
+        'default',
+        'sampledata/Trex.sfa',
+        'src/main/assets/Trex')
+
+sceneform.asset('sampledata/models/Ascenseur.fbx',
+        'src/main/res/raw/ascenseur')
+
+sceneform.asset('sampledata/models/Toilettes.fbx',
+        'src/main/res/raw/toilettes')
+
+sceneform.asset('sampledata/models/E30.fbx',
+        'src/main/res/raw/e30')
+
+sceneform.asset('sampledata/models/E31.fbx',
+        'src/main/res/raw/e31')
+
+sceneform.asset('sampledata/models/E32.fbx',
+        'src/main/res/raw/e32')
+
+sceneform.asset('sampledata/models/E33.fbx',
+        'src/main/res/raw/e33')
+
+sceneform.asset('sampledata/models/E34.fbx',
+        'src/main/res/raw/e34')
+
+sceneform.asset('sampledata/models/E35.fbx',
+        'src/main/res/raw/e35')
+
+sceneform.asset('sampledata/models/E36.fbx',
+        'src/main/res/raw/e36')
+
+sceneform.asset('sampledata/models/E37.fbx',
+        'src/main/res/raw/e37')
+
+sceneform.asset('sampledata/models/E37_Bis.fbx',
+        'src/main/res/raw/e37_bis')
+
+sceneform.asset('sampledata/models/E38.fbx',
+        'src/main/res/raw/e38')
+
+sceneform.asset('sampledata/models/BIROUCHE_MOURLLION.fbx',
+        'src/main/res/raw/birouche')
+
+sceneform.asset('sampledata/models/Evelyne_AUBRY.fbx',
+        'src/main/res/raw/aubry')
+
+sceneform.asset('sampledata/models/Gerard_BINDER.fbx',
+        'src/main/res/raw/binder')
+
+sceneform.asset('sampledata/models/Michel_BASSET.fbx',
+        'src/main/res/raw/basset')
+
+sceneform.asset('sampledata/models/Pierre_AMBS.fbx',
+        'src/main/res/raw/ambs')
+
+sceneform.asset('sampledata/models/Raphael_DUPUIS.fbx',
+        'src/main/res/raw/bupuis')
+
+sceneform.asset('sampledata/models/Souhir_BEN_SOUISSI.fbx',
+        'src/main/res/raw/ben_souissi')
+
+sceneform.asset('sampledata/models/Bureau_Chercheurs_LSI.fbx',
+        'src/main/res/raw/lsi')
+
+sceneform.asset('sampledata/models/Bureau_Chercheurs_MIAM1.fbx',
+        'src/main/res/raw/miam1')
+
+sceneform.asset('sampledata/models/Bureau_Chercheurs_MIAM2.fbx',
+        'src/main/res/raw/miam2')
+
+sceneform.asset('sampledata/models/Bureau_Chercheurs_MIAM3.fbx',
+        'src/main/res/raw/miam3')
+

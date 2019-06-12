@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fond2"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/activity_main_play_btn1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="380dp"
+        android:layout_marginLeft="30dp"
+        android:width="350dp"
+        android:height="60dp"
+        android:background="@drawable/button"
+        android:text="Visite"
+        android:textColor="#F5D93A"
+        android:textSize="30dp"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/activity_main_play_btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="500dp"
+        android:layout_marginLeft="30dp"
+        android:width="350dp"
+        android:height="60dp"
+        android:background="@drawable/button"
+        android:text="Mini-Jeux"
+        android:textColor="#F5D93A"
+        android:textSize="30dp"
+        tools:ignore="MissingConstraints" />
+
+    <!--   <Spinner
+           android:id="@+id/spinner"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center_horizontal"
+           android:layout_marginTop="550dp"
+           android:layout_marginLeft="30dp" /> -->
+
+
+   </RelativeLayout>
