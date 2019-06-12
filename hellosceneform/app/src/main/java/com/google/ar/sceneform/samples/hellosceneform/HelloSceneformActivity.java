@@ -1,18 +1,3 @@
-/*
- * Copyright 2018 Google LLC. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.google.ar.sceneform.samples.hellosceneform;
 
 import android.app.Activity;
@@ -26,11 +11,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.Toast;
+
 import com.google.ar.core.Anchor;
-import com.google.ar.core.HitResult;
-import com.google.ar.core.Plane;
 import com.google.ar.core.Pose;
-import com.google.ar.core.Session;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Node;
@@ -41,7 +24,6 @@ import com.google.ar.sceneform.rendering.MaterialFactory;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ShapeFactory;
 import com.google.ar.sceneform.ux.ArFragment;
-import com.google.ar.sceneform.ux.TransformableNode;
 
 import java.util.ArrayList;
 
@@ -71,60 +53,12 @@ public class HelloSceneformActivity extends AppCompatActivity {
   private ModelRenderable Dupuis_R;
   private ModelRenderable BEN_SOUISSI_S;
 
+  private GSalle gSalle;
+  private int nbtap = 0;
 
-  public class Salle {
-    public String name;
-    public Node node;
-
-    private ArrayList<Salle> salles;
-
-    public Salle(String name, AnchorNode parent, ModelRenderable model,boolean is_local, Vector3 position, Vector3 scale, Quaternion rotation) {
-        this.salles = new ArrayList<>();
-        this.name = name;
-        this.node = new Node();
-        this.node.setParent(parent);
-        model.setShadowReceiver(false);
-        model.setShadowCaster(false);
-        this.node.setRenderable(model);
-        if(is_local) {
-            this.node.setLocalPosition(position);
-        } else {
-            this.node.setWorldPosition(position);
-        }
-        this.node.setLocalScale(scale);
-        this.node.setLocalRotation(rotation);
-    }
-
-      public void addNeighbourg(Salle s){
-          if(!this.salles.contains(s)){
-              this.salles.add(s);
-              s.addNeighbourg(this);
-          }
-
-      }
-
-      public ArrayList<Salle> goTo(Salle end , Salle previous){
-          ArrayList<Salle> res = new ArrayList<>();
-          if(this == end){
-              res.add(this);
-              return res;
-          }
-          else{
-              for(Salle s : this.salles){
-                  if(s==previous)continue;
-                  ArrayList<Salle> listSalle = s.goTo(end,this);
-                  if(!listSalle.isEmpty()) {
-                      listSalle.add(this);
-                      return listSalle;
-                  }
-              }
-          }
-          return res;
-      }
-  }
 
   private Node addLine(Salle from, Salle to) {
-    float lenght = Vector3.subtract(from.node.getWorldPosition(), to.node.getWorldPosition()).length();
+    float lenght = Vector3.subtract(from.getNode().getWorldPosition(), to.getNode().getWorldPosition()).length();
     Color blue = new Color(android.graphics.Color.parseColor("#2c5c9a"));
     Node node = new Node();
     //create a blue cylinder
@@ -136,12 +70,12 @@ public class HelloSceneformActivity extends AppCompatActivity {
                 model.setShadowReceiver(false);
 
                 //assign model
-                node.setParent(from.node.getParent());
+                node.setParent(from.getNode().getParent());
                 node.setRenderable(model);
-                node.setWorldPosition(Vector3.add(to.node.getWorldPosition(), new Vector3(-0.5f, -1f, 0f)));
+                node.setWorldPosition(Vector3.add(to.getNode().getWorldPosition(), new Vector3(-0.5f, -1f, 0f)));
 
                 //set rotation
-                final Vector3 difference = Vector3.subtract(to.node.getWorldPosition(), from.node.getWorldPosition());
+                final Vector3 difference = Vector3.subtract(to.getNode().getWorldPosition(), from.getNode().getWorldPosition());
                 final Vector3 directionFromTopToBottom = difference.normalized();
                 final Quaternion rotationFromAToB =
                         Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
@@ -151,11 +85,27 @@ public class HelloSceneformActivity extends AppCompatActivity {
     return node;
   }
 
-  public void drawPath(ArrayList<Salle> path){
+  private void drawPath(ArrayList<Salle> path){
     for(int i = 0 ; i < path.size()-1; i++){
         addLine(path.get(i),path.get(i+1));
     }
   }
+
+  private Salle nearest(){
+      Salle res = null;
+      float distance = Float.MAX_VALUE;
+      Vector3 camera = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
+      for(Salle s : gSalle.getSalles()){
+          float tmp = Vector3.subtract(s.getNode().getWorldPosition(),camera).length();
+        if( tmp < distance){
+            distance = tmp;
+            res = s;
+        }
+      }
+      return res;
+  }
+
+
 
   @Override
   @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -170,7 +120,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
     setContentView(R.layout.activity_ux);
     arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
-
+    gSalle = GSalle.getInstance();
       ModelRenderable.builder()
               .setSource(this, R.raw.toilettes)
               .build()
@@ -178,7 +128,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load toilettes renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -191,7 +141,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load ascenseur renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -204,7 +154,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load e30 renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -217,7 +167,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load e31 renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -230,7 +180,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load e32 renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -243,7 +193,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load e33 renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -256,7 +206,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load e34 renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -269,7 +219,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load e35 renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -282,7 +232,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load e36 renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -295,13 +245,11 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load e37 renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
                       });
-
-
 
       ModelRenderable.builder()
               .setSource(this, R.raw.e37_bis)
@@ -310,7 +258,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load e37bis renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -323,7 +271,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
               .exceptionally(
                       throwable -> {
                           Toast toast =
-                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                  Toast.makeText(this, "Unable to load e38 renderable", Toast.LENGTH_LONG);
                           toast.setGravity(Gravity.CENTER, 0, 0);
                           toast.show();
                           return null;
@@ -333,43 +281,49 @@ public class HelloSceneformActivity extends AppCompatActivity {
     arFragment.getArSceneView().getScene().setOnTouchListener(
         (HitTestResult hitResult, MotionEvent motionEvent) -> {
 
+            if(nbtap == 0){
 
-            Anchor debut3 = arFragment.getArSceneView().getSession().createAnchor(Pose.makeTranslation(new float[] {0,0,-15f}));
-            Anchor fin3 = arFragment.getArSceneView().getSession().createAnchor(Pose.makeTranslation(new float[] {0,0,-30f}));
+                Anchor debut3 = arFragment.getArSceneView().getSession().createAnchor(Pose.makeTranslation(new float[] {0,0,-15f}));
+                Anchor fin3 = arFragment.getArSceneView().getSession().createAnchor(Pose.makeTranslation(new float[] {0,0,-30f}));
 
-            AnchorNode debutNode3 = new AnchorNode(debut3);
-            debutNode3.setParent(arFragment.getArSceneView().getScene());
+                AnchorNode debutNode3 = new AnchorNode(debut3);
+                debutNode3.setParent(arFragment.getArSceneView().getScene());
 
-            AnchorNode finNode3 = new AnchorNode(fin3);
-            finNode3.setParent(arFragment.getArSceneView().getScene());
+                AnchorNode finNode3 = new AnchorNode(fin3);
+                finNode3.setParent(arFragment.getArSceneView().getScene());
 
-            Salle toilette = new Salle("Toilette", debutNode3,toilette_model, false, new Vector3(0f,1f,-3.3f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) );
-            Salle ascenseur = new Salle("Ascenseur", debutNode3, ascenseur_model, false, new Vector3(0f,1f,-4.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) );
-            Salle toilette_handicap = new Salle("Toilette handicapé", debutNode3,toilette_model, false, new Vector3(0f,1f,-9.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) );
-            Salle e30 = new Salle("e30", debutNode3,e30_model, false, new Vector3(0f,1f,-17.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) );
-            Salle e31 = new Salle("e31", debutNode3, e31_model, false, new Vector3(0f,1f, -18.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
-            Salle e32 = new Salle("e32", debutNode3, e32_model, false, new Vector3(0f,1f, -30.4f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
-            Salle e33 = new Salle("e33", finNode3, e33_model, false, new Vector3(0f,1f, -31.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
-            Salle e34 = new Salle("e34", finNode3, e34_model, false, new Vector3(0f,1f, -40f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
-            Salle e35 = new Salle("e35", finNode3, e35_model, false, new Vector3(0f,1f, -44.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
-            Salle e36 = new Salle("e36", finNode3, e36_model, false, new Vector3(0f,1f, -50f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
-            Salle e37 = new Salle("e37", finNode3, e37_model, false, new Vector3(0f,1f, -53.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
-            Salle e37_bis = new Salle("e37_bis", finNode3, e37_bis_model, false, new Vector3(0f,1f, -60.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
-            Salle e38 = new Salle("e38", finNode3, e38_model, false, new Vector3(0f,1f, -67.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90));
-            addLine(ascenseur, e30);
-            toilette.addNeighbourg(ascenseur);
-            ascenseur.addNeighbourg(toilette_handicap);
-            toilette_handicap.addNeighbourg(e30);
-            e30.addNeighbourg(e31);
-            e31.addNeighbourg(e32);
-            e32.addNeighbourg(e33);
-            e33.addNeighbourg(e34);
-            e34.addNeighbourg(e35);
-            e35.addNeighbourg(e36);
-            e36.addNeighbourg(e37);
-            e37.addNeighbourg(e37_bis);
-            e37_bis.addNeighbourg(e38);
-            drawPath(ascenseur.goTo(e36,null));
+                Salle toilette = gSalle.create(new Salle("Toilette", debutNode3,toilette_model,  new Vector3(0f,1f,-3.3f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) ));
+                Salle ascenseur = gSalle.create(new Salle("Ascenseur", debutNode3, ascenseur_model,  new Vector3(0f,1f,-4.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) ));
+                Salle toilette_handicap = gSalle.create(new Salle("Toilette handicapé", debutNode3,toilette_model,  new Vector3(0f,1f,-9.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)) );
+                Salle e30 = gSalle.create(new Salle("e30", debutNode3,e30_model,  new Vector3(0f,1f,-17.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)) );
+                Salle e31 = gSalle.create(new Salle("e31", debutNode3, e31_model, new Vector3(0f,1f, -18.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e32 = gSalle.create(new Salle("e32", debutNode3, e32_model, new Vector3(0f,1f, -30.4f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e33 = gSalle.create(new Salle("e33", finNode3, e33_model,  new Vector3(0f,1f, -31.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e34 = gSalle.create(new Salle("e34", finNode3, e34_model,  new Vector3(0f,1f, -40f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e35 = gSalle.create(new Salle("e35", finNode3, e35_model,  new Vector3(0f,1f, -44.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e36 = gSalle.create(new Salle("e36", finNode3, e36_model,  new Vector3(0f,1f, -50f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e37 = gSalle.create(new Salle("e37", finNode3, e37_model,  new Vector3(0f,1f, -53.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e37_bis = gSalle.create(new Salle("e37_bis", finNode3, e37_bis_model, new Vector3(0f,1f, -60.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+                Salle e38 = gSalle.create(new Salle("e38", finNode3, e38_model,  new Vector3(0f,1f, -67.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+
+                toilette.addNeighbourg(ascenseur);
+                ascenseur.addNeighbourg(toilette_handicap);
+                toilette_handicap.addNeighbourg(e30);
+                e30.addNeighbourg(e31);
+                e31.addNeighbourg(e32);
+                e32.addNeighbourg(e33);
+                e33.addNeighbourg(e34);
+                e34.addNeighbourg(e35);
+                e35.addNeighbourg(e36);
+                e36.addNeighbourg(e37);
+                e37.addNeighbourg(e37_bis);
+                e37_bis.addNeighbourg(e38);
+            }
+            if(nbtap == 1){
+                Salle s = nearest();
+                drawPath(s.goTo(gSalle.getSalle("e36"),null));
+            }
+            nbtap++;
             return false;
         });
   }
