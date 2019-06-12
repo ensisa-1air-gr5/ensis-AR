@@ -99,6 +99,9 @@ sceneform.asset('sampledata/models/E37_Bis.fbx',
 sceneform.asset('sampledata/models/E38.fbx',
         'src/main/res/raw/e38')
 
+sceneform.asset('sampledata/models/BIROUCHE_MOURLLION.fbx',
+        'src/main/res/raw/birouche')
+
 sceneform.asset('sampledata/models/Evelyne_AUBRY.fbx',
         'src/main/res/raw/aubry')
 
@@ -116,4 +119,16 @@ sceneform.asset('sampledata/models/Raphael_DUPUIS.fbx',
 
 sceneform.asset('sampledata/models/Souhir_BEN_SOUISSI.fbx',
         'src/main/res/raw/ben_souissi')
+
+sceneform.asset('sampledata/models/Bureau_Chercheurs_LSI.fbx',
+        'src/main/res/raw/lsi')
+
+sceneform.asset('sampledata/models/Bureau_Chercheurs_MIAM1.fbx',
+        'src/main/res/raw/miam1')
+
+sceneform.asset('sampledata/models/Bureau_Chercheurs_MIAM2.fbx',
+        'src/main/res/raw/miam2')
+
+sceneform.asset('sampledata/models/Bureau_Chercheurs_MIAM3.fbx',
+        'src/main/res/raw/miam3')
 

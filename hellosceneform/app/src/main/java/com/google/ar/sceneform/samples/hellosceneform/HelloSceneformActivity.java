@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Pose;
 import com.google.ar.sceneform.AnchorNode;
@@ -38,6 +37,8 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
   private static final String TAG = HelloSceneformActivity.class.getSimpleName();
   private static final double MIN_OPENGL_VERSION = 3.0;
 
+  boolean create = false; // if true then all the rendarable are already assign
+
   private ArFragment arFragment;
   private ModelRenderable ascenseur_model;
   private ModelRenderable toilette_model;
@@ -51,16 +52,21 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
   private ModelRenderable e37_model;
   private ModelRenderable e37_bis_model;
   private ModelRenderable e38_model;
-  private ModelRenderable Aubry_E;
-  private ModelRenderable Binder_G;
-  private ModelRenderable Basset_M;
-  private ModelRenderable Dupuis_R;
-  private ModelRenderable BEN_SOUISSI_S;
+  private ModelRenderable aubry_model;
+  private ModelRenderable binder_model;
+  private ModelRenderable birouche_model;
+  private ModelRenderable basset_model;
+  private ModelRenderable dupuis_model;
+  private ModelRenderable ben_souissi_model;
+  private ModelRenderable miam2_model;
+  private ModelRenderable miam3_model;
 
   private GSalle gSalle;
   private int nbtap = 0;
   private Spinner spinner;
   private boolean isCreated = false;
+  private Vector3 direction = null;
+
   private Node addLine(Salle from, Salle to) {
     float lenght = Vector3.subtract(from.getNode().getWorldPosition(), to.getNode().getWorldPosition()).length();
     Color blue = new Color(android.graphics.Color.parseColor("#2c5c9a"));
@@ -255,6 +261,8 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
                           return null;
                       });
 
+
+
       ModelRenderable.builder()
               .setSource(this, R.raw.e37_bis)
               .build()
@@ -281,6 +289,72 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
                           return null;
                       });
 
+      ModelRenderable.builder()
+              .setSource(this, R.raw.miam2)
+              .build()
+              .thenAccept(renderable -> miam2_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.miam3)
+              .build()
+              .thenAccept(renderable -> miam3_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.binder)
+              .build()
+              .thenAccept(renderable -> binder_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.birouche)
+              .build()
+              .thenAccept(renderable -> birouche_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+      ModelRenderable.builder()
+              .setSource(this, R.raw.bupuis)
+              .build()
+              .thenAccept(renderable -> dupuis_model = renderable)
+              .exceptionally(
+                      throwable -> {
+                          Toast toast =
+                                  Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                          toast.setGravity(Gravity.CENTER, 0, 0);
+                          toast.show();
+                          return null;
+                      });
+
+
         spinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.salles, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -290,50 +364,59 @@ public class HelloSceneformActivity extends AppCompatActivity implements Adapter
 
     arFragment.getArSceneView().getScene().setOnTouchListener(
         (HitTestResult hitResult, MotionEvent motionEvent) -> {
-
-            if(nbtap == 0){
+            if(create) {
+                return false;
+            }
 
                 Anchor debut3 = arFragment.getArSceneView().getSession().createAnchor(Pose.makeTranslation(new float[] {0,0,-15f}));
                 Anchor fin3 = arFragment.getArSceneView().getSession().createAnchor(Pose.makeTranslation(new float[] {0,0,-30f}));
 
-                AnchorNode debutNode3 = new AnchorNode(debut3);
-                debutNode3.setParent(arFragment.getArSceneView().getScene());
+            AnchorNode world = new AnchorNode();
+            world.setParent(arFragment.getArSceneView().getScene());
 
-                AnchorNode finNode3 = new AnchorNode(fin3);
-                finNode3.setParent(arFragment.getArSceneView().getScene());
-
-                Salle toilette = gSalle.create(new Salle("Toilette", debutNode3,toilette_model,  new Vector3(0f,1f,-3.3f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) ));
-                Salle ascenseur = gSalle.create(new Salle("Ascenseur", debutNode3, ascenseur_model,  new Vector3(0f,1f,-4.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) ));
-                Salle toilette_handicap = gSalle.create(new Salle("Toilette handicapé", debutNode3,toilette_model,  new Vector3(0f,1f,-9.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)) );
-                Salle e30 = gSalle.create(new Salle("E 30", debutNode3,e30_model,  new Vector3(0f,1f,-17.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)) );
-                Salle e31 = gSalle.create(new Salle("E 31", debutNode3, e31_model, new Vector3(0f,1f, -18.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e32 = gSalle.create(new Salle("E 32", debutNode3, e32_model, new Vector3(0f,1f, -30.4f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e33 = gSalle.create(new Salle("E 33", finNode3, e33_model,  new Vector3(0f,1f, -31.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e34 = gSalle.create(new Salle("E 34", finNode3, e34_model,  new Vector3(0f,1f, -40f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e35 = gSalle.create(new Salle("E 35", finNode3, e35_model,  new Vector3(0f,1f, -44.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e36 = gSalle.create(new Salle("E 36", finNode3, e36_model,  new Vector3(0f,1f, -50f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e37 = gSalle.create(new Salle("E 37", finNode3, e37_model,  new Vector3(0f,1f, -53.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e37_bis = gSalle.create(new Salle("E 37 bis", finNode3, e37_bis_model, new Vector3(0f,1f, -60.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-                Salle e38 = gSalle.create(new Salle("E 38", finNode3, e38_model,  new Vector3(0f,1f, -67.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
-
-                toilette.addNeighbourg(ascenseur);
-                ascenseur.addNeighbourg(toilette_handicap);
-                toilette_handicap.addNeighbourg(e30);
-                e30.addNeighbourg(e31);
-                e31.addNeighbourg(e32);
-                e32.addNeighbourg(e33);
-                e33.addNeighbourg(e34);
-                e34.addNeighbourg(e35);
-                e35.addNeighbourg(e36);
-                e36.addNeighbourg(e37);
-                e37.addNeighbourg(e37_bis);
-                e37_bis.addNeighbourg(e38);
+            if(direction == null) {
+                direction = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
+                direction.y = 0;
+                world.setWorldRotation(new Quaternion(new Vector3(0,1,0), (float)Math.toDegrees(Math.asin(direction.x/direction.length()))));
             }
-            if(nbtap == 1){
-                Salle s = nearest();
-                drawPath(s.goTo(gSalle.getSalle("e36"),null));
-            }
-            nbtap++;
+
+            AnchorNode debutNode3 = new AnchorNode(debut3);
+            debutNode3.setParent(world);
+
+            AnchorNode finNode3 = new AnchorNode(fin3);
+            finNode3.setParent(world);
+
+            Salle toilette = gSalle.create(new Salle("Toilette", debutNode3,toilette_model,  new Vector3(0f,1f,-3.3f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) ));
+            Salle ascenseur = gSalle.create(new Salle("Ascenseur", debutNode3, ascenseur_model,  new Vector3(0f,1f,-4.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90) ));
+            Salle toilette_handicap = gSalle.create(new Salle("Toilette handicapé", debutNode3,toilette_model,  new Vector3(0f,1f,-9.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)) );
+            Salle e30 = gSalle.create(new Salle("e30", debutNode3,e30_model,  new Vector3(0f,1f,-17.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)) );
+            Salle e31 = gSalle.create(new Salle("e31", debutNode3, e31_model, new Vector3(0f,1f, -18.8f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+            Salle e32 = gSalle.create(new Salle("e32", debutNode3, e32_model, new Vector3(0f,1f, -30.3f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+            Salle e33 = gSalle.create(new Salle("e33", finNode3, e33_model,  new Vector3(0f,1f, -31.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+            Salle e34 = gSalle.create(new Salle("e34", finNode3, e34_model,  new Vector3(0f,1f, -40f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+            Salle e36 = gSalle.create(new Salle("e36", finNode3, e36_model,  new Vector3(0f,1f, -50f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+            Salle e37 = gSalle.create(new Salle("e37", finNode3, e37_model,  new Vector3(0f,1f, -53.2f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+            Salle e37_bis = gSalle.create(new Salle("e37_bis", finNode3, e37_bis_model, new Vector3(0f,1f, -60.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+            Salle e38 = gSalle.create(new Salle("e38", finNode3, e38_model,  new Vector3(0f,1f, -67.5f), new Vector3(0.5f,1f,0.5f), new Quaternion(new Vector3(0,1,0), -90)));
+            Salle miam2 = gSalle.create(new Salle("miam2", finNode3, miam2_model,  new Vector3(-6f, 1f, -28.5f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), -180)));
+            Salle miam3 = gSalle.create(new Salle("miam3", finNode3, miam3_model,  new Vector3(-6f, 1f, -34.5f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
+            Salle binder = gSalle.create(new Salle("binder", finNode3, binder_model,  new Vector3(-17f, 1f, -28.2f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), -180)));
+            Salle birouche = gSalle.create(new Salle("birouche", finNode3, birouche_model,  new Vector3(-17f, 1f, -31.8f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
+            Salle dupuis = gSalle.create(new Salle("dupuis", finNode3, dupuis_model,  new Vector3(-21.5f, 1f, -31.8f), new Vector3(0.5f, 1f, 0.5f), new Quaternion(new Vector3(0, 1, 0), 0)));
+
+
+            toilette.addNeighbourg(ascenseur);
+            ascenseur.addNeighbourg(toilette_handicap);
+            toilette_handicap.addNeighbourg(e30);
+            e30.addNeighbourg(e31);
+            e31.addNeighbourg(e32);
+            e32.addNeighbourg(e33);
+            e33.addNeighbourg(e34);
+            e34.addNeighbourg(e36);
+            e36.addNeighbourg(e37);
+            e37.addNeighbourg(e37_bis);
+            e37_bis.addNeighbourg(e38);
+            create = true;
             return false;
         });
   }
