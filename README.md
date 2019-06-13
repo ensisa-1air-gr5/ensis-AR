@@ -14,12 +14,6 @@ Nous avons utilisé ARCORE, Android Studio et Blender.
 * Guidage : à l'aide d'une liste déroulante contennant les salles, le visiteur est guidé vers la salle choisie.
 * Mini-jeux : les QR-code permettent de lancer des mini-jeux.
 
-## Démo :
-
-# _**//TODO changer le lien**_
-[Vidéo de présentation](www.youtube.com)
-
-
 ## Gestion de projet :
 
 ### Déroulement du projet
